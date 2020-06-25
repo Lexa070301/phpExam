@@ -1,5 +1,5 @@
 <?php
-$database = mysqli_connect("localhost", "root", "Death_Note_007", "newsboard");
+$database = mysqli_connect("localhost", "root", "Death_Note_007", "exam");
 function super_hash($hesh) {
     for ($i = 0; $i < 10000; $i++) {
         if ($i == 634) {
