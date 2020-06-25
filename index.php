@@ -18,6 +18,14 @@ if (isset($_POST["submit"])) {
 if (isset($_POST["create-session-submit"])) {
     mysqli_query($database, "INSERT INTO sessions (status) VALUES ('enabled')");
 }
+if (isset($_POST["create-session-delete"])) {
+    $session_id = $_POST['session_id'];
+    mysqli_query($database, "DELETE FROM sessions WHERE id = $session_id");
+}
+if (isset($_POST["create-session-close"])) {
+    $session_id = $_POST['session_id'];
+    mysqli_query($database, "UPDATE sessions SET status = 'closed' WHERE id = $session_id");
+}
 $sessions = mysqli_fetch_all(mysqli_query($database, "SELECT * FROM sessions"), MYSQLI_BOTH);
 if (isset($_POST["submit-out"])) {
     setcookie('admin', true, time() - 3600);
@@ -71,6 +79,14 @@ if (isset($_POST["submit-out"])) {
                     <span class='sessions__item__status'>Статут: " . $sessions[$i]['status'] . "</span>
                     <a class='sessions__item__link' href='session.php?id=" . $sessions[$i]['id'] . "'>Перейти к сесии</a>
                     <a class='sessions__item__link' href='protocol.php?id=" . $sessions[$i]['id'] . "'>Посмотреть протокол</a>
+                    <form action='' method='post' class='delete-session'>
+                        <input type='hidden' name='session_id' value='" . $sessions[$i]['id'] . "'>
+                        <input type='submit' name='create-session-delete' class='create-session-delete' value='Удалить сессию'>
+                    </form>
+                    <form action='' method='post' class='close-session'>
+                        <input type='hidden' name='session_id' value='" . $sessions[$i]['id'] . "'>
+                        <input type='submit' name='create-session-close' class='create-session-close' value='Закрыть сессию'>
+                    </form>
                   </li>";
             }
             ?>
