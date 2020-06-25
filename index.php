@@ -59,7 +59,7 @@ $sessions = mysqli_fetch_all(mysqli_query($database, "SELECT * FROM sessions"), 
                     <span class='sessions__item__status'>ID сессии: " . $sessions[$i]['id'] . "</span>
                     <span class='sessions__item__status'>Статут: " . $sessions[$i]['status'] . "</span>
                     <a class='sessions__item__link' href='session.php?id=" . $sessions[$i]['id'] . "'>Перейти к сесии</a>
-                    <a class='sessions__item__link' href='protocol.php?id=" . $sessions[$i]['id'] . "'>Перейти к сесии</a>
+                    <a class='sessions__item__link' href='protocol.php?id=" . $sessions[$i]['id'] . "'>Посмотреть протокол</a>
                   </li>";
         }
         ?>
