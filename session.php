@@ -2,6 +2,10 @@
 include 'functions.php';
 $session_id = $_GET['id'];
 $questions = mysqli_fetch_all(mysqli_query($database, "SELECT * FROM questions WHERE session_id = '$session_id' ORDER BY id"), MYSQLI_BOTH);
+if (empty($questions)) {
+    header('Location: index.php');
+    exit();
+}
 $ok = false;
 if (isset($_POST["submit"])) {
     $ip = $_SERVER['REMOTE_ADDR'];
