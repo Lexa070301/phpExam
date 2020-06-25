@@ -63,9 +63,9 @@ $sessions = mysqli_fetch_all(mysqli_query($database, "SELECT * FROM sessions"), 
                   </li>";
         }
         ?>
-        <li></li>
     </ul>
 <?php endif; ?>
+<script src="js/jquery-3.4.1.min.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

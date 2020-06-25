@@ -3,8 +3,7 @@ include 'functions.php';
 $session_id = $_GET['id'];
 $answers = mysqli_fetch_all(mysqli_query($database, "SELECT * FROM user_answers WHERE session_id = '$session_id' ORDER BY ip"), MYSQLI_BOTH);
 $answers_count = mysqli_fetch_all(mysqli_query($database, "SELECT count(ip) AS ip_count, SUM(points) AS points_count FROM user_answers WHERE session_id = '$session_id' GROUP BY ip ORDER BY ip"), MYSQLI_BOTH);
-
-if (empty($answers)) {
+if (empty($questions) && (!isset($_COOKIE['admin']))) {
     header('Location: index.php');
     exit();
 }
@@ -57,6 +56,7 @@ for ($i = 0; $i < count($answers_count); $i++) {
 }
 echo '<span style="margin-bottom: 50px; display: block">Средний балл по сесии:' . $sum/count($answers_count) . '</span>';
 ?>
+<script src="js/jquery-3.4.1.min.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

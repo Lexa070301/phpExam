@@ -2,7 +2,7 @@
 include 'functions.php';
 $session_id = $_GET['id'];
 $questions = mysqli_fetch_all(mysqli_query($database, "SELECT * FROM questions WHERE session_id = '$session_id' ORDER BY id"), MYSQLI_BOTH);
-if (empty($questions)) {
+if (empty($questions) && (!isset($_COOKIE['admin']))) {
     header('Location: index.php');
     exit();
 }
@@ -138,88 +138,111 @@ if (isset($_POST["submit"])) {
     $ok = true;
 }
 ?>
-<!doctype html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Exam</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-<?php
-echo '<form action="" method="post">';
-$counter_1 = 1;
-$counter_2 = 1;
-$counter_3 = 1;
-$counter_4 = 1;
-$counter_5 = 1;
-$counter_6 = 1;
-for ($i = 0; $i < count($questions); $i++) {
-    $question = $questions[$i]['question'];
-    $count = 0;
-    $values = [];
-    switch ($questions[$i]['question_type']) {
-        case 1:
-            echo "<label>$question</label>" . '<br>';
-            echo "<input required type='number' name='number_1-$counter_1'>";
-            $counter_1++;
-            echo '<br>';
-            break;
-        case 2:
-            echo "<label>$question</label>" . '<br>';
-            echo "<input required type='number' name='number_2-$counter_2' min='0'>";
-            $counter_2++;
-            echo '<br>';
-            break;
-        case 3:
-            echo "<label>$question</label>" . '<br>';
-            echo "<input required type='text' name='text_3-$counter_3' minlength='1' maxlength='30'>";
-            $counter_3++;
-            echo '<br>';
-            break;
-        case 4:
-            echo "<label>$question</label>" . '<br>';
-            echo "<textarea required style='resize: none; width: 200px; height: 100px' name='text_4-$counter_4' minlength='1' maxlength='30'></textarea>";
-            $counter_4++;
-            echo '<br>';
-            break;
-        case 5:
-            $count = substr_count($questions[$i]['answer'], ',') + 1;
-            $values = explode(",", $questions[$i]['answer']);
-            echo "<label>$question</label>" . '<br>';
-            for ($j = 0; $j < $count; $j++) {
-                echo "<input required type='radio' name='radio_5-$counter_5' value='" . stristr($values[$j], '-', true) . "'>";
-                echo "<span>" . stristr($values[$j], '-', true) . "</span>" . '<br>';
+    <!doctype html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Exam</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+    <?php
+    if (!empty($questions)) {
+        echo '<form action="" method="post">';
+        $counter_1 = 1;
+        $counter_2 = 1;
+        $counter_3 = 1;
+        $counter_4 = 1;
+        $counter_5 = 1;
+        $counter_6 = 1;
+        for ($i = 0; $i < count($questions); $i++) {
+            $question = $questions[$i]['question'];
+            $count = 0;
+            $values = [];
+            switch ($questions[$i]['question_type']) {
+                case 1:
+                    echo "<label>$question</label>" . '<br>';
+                    echo "<input required type='number' name='number_1-$counter_1'>";
+                    $counter_1++;
+                    echo '<br>';
+                    break;
+                case 2:
+                    echo "<label>$question</label>" . '<br>';
+                    echo "<input required type='number' name='number_2-$counter_2' min='0'>";
+                    $counter_2++;
+                    echo '<br>';
+                    break;
+                case 3:
+                    echo "<label>$question</label>" . '<br>';
+                    echo "<input required type='text' name='text_3-$counter_3' minlength='1' maxlength='30'>";
+                    $counter_3++;
+                    echo '<br>';
+                    break;
+                case 4:
+                    echo "<label>$question</label>" . '<br>';
+                    echo "<textarea required style='resize: none; width: 200px; height: 100px' name='text_4-$counter_4' minlength='1' maxlength='30'></textarea>";
+                    $counter_4++;
+                    echo '<br>';
+                    break;
+                case 5:
+                    $count = substr_count($questions[$i]['answer'], ',') + 1;
+                    $values = explode(",", $questions[$i]['answer']);
+                    echo "<label>$question</label>" . '<br>';
+                    for ($j = 0; $j < $count; $j++) {
+                        echo "<input required type='radio' name='radio_5-$counter_5' value='" . stristr($values[$j], '-', true) . "'>";
+                        echo "<span>" . stristr($values[$j], '-', true) . "</span>" . '<br>';
+                    }
+                    $counter_5++;
+                    echo '<br>';
+                    break;
+                case 6:
+                    $count = substr_count($questions[$i]['answer'], ',') + 1;
+                    $values = explode(",", $questions[$i]['answer']);
+                    echo "<label>$question</label>" . '<br>';
+                    for ($j = 0; $j < $count; $j++) {
+                        echo "<input type='checkbox' name='checkbox_6-" . $counter_6 . "[]' value='" . stristr($values[$j], '-', true) . "'>";
+                        echo "<span>" . stristr($values[$j], '-', true) . "</span>" . '<br>';
+                    }
+                    $counter_6++;
+                    echo '<br>';
+                    break;
             }
-            $counter_5++;
+        }
+        echo '<input type="submit" value="Отправить" name="submit">';
+        echo '</form>';
+        if ($ok == true) {
             echo '<br>';
-            break;
-        case 6:
-            $count = substr_count($questions[$i]['answer'], ',') + 1;
-            $values = explode(",", $questions[$i]['answer']);
-            echo "<label>$question</label>" . '<br>';
-            for ($j = 0; $j < $count; $j++) {
-                echo "<input type='checkbox' name='checkbox_6-" . $counter_6 . "[]' value='" . stristr($values[$j], '-', true) . "'>";
-                echo "<span>" . stristr($values[$j], '-', true) . "</span>" . '<br>';
-            }
-            $counter_6++;
-            echo '<br>';
-            break;
+            echo '<span>Форма отправлена!</span>';
+        }
     }
-}
-echo '<input type="submit" value="Отправить" name="submit">';
-echo '</form>';
-if ($ok == true) {
-    echo '<br>';
-    echo '<span>Форма отправлена!</span>';
-}
-?>
-<script src="js/main.js"></script>
-</body>
-</html>
+    ?>
+    <?php if (empty($questions)): ?>
+        <form action="" method="post" name="add_question">
+            <label for="question_type">Выберите тип вопроса</label>
+            <br>
+            <select name="question_type" id="question_type">
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="5">6</option>
+            </select>
+            <br>
+            <label for="add_question_text">Введите фурмулеровку вопроса</label>
+            <br>
+            <input type="text" name="add_question_text" id="add_question_text">
+            <br>
+            <input type="submit" name="add_question_submit" value="Добавить вопрос"
+        </form>
+    <?php endif; ?>
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/main.js"></script>
+    </body>
+    </html>
 <?php
 mysqli_close($database);
 ?>
