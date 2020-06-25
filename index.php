@@ -68,3 +68,6 @@ $sessions = mysqli_fetch_all(mysqli_query($database, "SELECT * FROM sessions"), 
 <script src="js/main.js"></script>
 </body>
 </html>
+<?php
+mysqli_close($database);
+?>

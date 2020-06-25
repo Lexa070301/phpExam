@@ -1,13 +1,137 @@
 <?php
 include 'functions.php';
 $session_id = $_GET['id'];
-$questions = mysqli_fetch_all(mysqli_query($database, "SELECT * FROM questions WHERE session_id = '$session_id'"), MYSQLI_BOTH);
+$questions = mysqli_fetch_all(mysqli_query($database, "SELECT * FROM questions WHERE session_id = '$session_id' ORDER BY id"), MYSQLI_BOTH);
+$ok = false;
 if (isset($_POST["submit"])) {
     $ip = $_SERVER['REMOTE_ADDR'];
-    //echo $_POST['radio_5-1'];
-    $checkboxes = $_POST['checkbox_6-1-'];
-    echo count($checkboxes);
-    //mysqli_query($database, "INSERT INTO user_answers (ip, datetime, session_id, question_id, answer, points) VALUES ($ip, NOW(), $session_id, )");
+    $number_1 = [];
+    $i = 0;
+    if (isset($_POST['number_1-1']) && !empty($_POST['number_1-1'])) {
+        $i = 1;
+        while (isset($_POST['number_1-' . $i])) {
+            array_push($number_1, $_POST['number_1-' . $i]);
+            $i++;
+        }
+    }
+    $number_2 = [];
+    if (isset($_POST['number_2-1']) && !empty($_POST['number_2-1'])) {
+        $i = 1;
+        while (isset($_POST['number_2-' . $i])) {
+            array_push($number_2, $_POST['number_2-' . $i]);
+            $i++;
+        }
+    }
+    $text_3 = [];
+    if (isset($_POST['text_3-1']) && !empty($_POST['text_3-1'])) {
+        $i = 1;
+        while (isset($_POST['text_3-' . $i])) {
+            array_push($text_3, $_POST['text_3-' . $i]);
+            $i++;
+        }
+    }
+    $text_4 = [];
+    if (isset($_POST['text_4-1']) && !empty($_POST['text_4-1'])) {
+        $i = 1;
+        while (isset($_POST['text_4-' . $i])) {
+            array_push($text_4, $_POST['text_4-' . $i]);
+            $i++;
+        }
+    }
+    $radio_5 = [];
+    if (isset($_POST['radio_5-1']) && !empty($_POST['radio_5-1'])) {
+        $i = 1;
+        while (isset($_POST['radio_5-' . $i])) {
+            array_push($radio_5, $_POST['radio_5-' . $i]);
+            $i++;
+        }
+    }
+    $checkbox_6 = array(array());
+    if (isset($_POST['checkbox_6-1']) && !empty($_POST['checkbox_6-1'])) {
+        $j = 1;
+        while (isset($_POST['checkbox_6-' . $j])) {
+            $i = 1;
+            $checkboxes = $_POST['checkbox_6-' . $j];
+            while (isset($checkboxes[$i - 1])) {
+                array_push($checkbox_6[$j - 1], $checkboxes[$i - 1]);
+                $i++;
+            }
+            $j++;
+        }
+
+    }
+
+//    print_r($number_1);
+//    echo '<br>';
+//    print_r($number_2);
+//    echo '<br>';
+//    print_r($text_3);
+//    echo '<br>';
+//    print_r($text_4);
+//    echo '<br>';
+//    print_r($radio_5);
+//    echo '<br>';
+//    print_r($checkbox_6);
+    $counter_1 = 0;
+    $counter_2 = 0;
+    $counter_3 = 0;
+    $counter_4 = 0;
+    $counter_5 = 0;
+    $counter_6 = 0;
+    for ($i = 0; $i < count($questions); $i++) {
+        $question_id = $questions[$i]['id'];
+        $answer = '';
+        $points = 0;
+        switch ($questions[$i]['question_type']) {
+            case 1:
+                $answer = $number_1[$counter_1];
+                $counter_1++;
+                break;
+            case 2:
+                $answer = $number_2[$counter_2];
+                $counter_2++;
+                break;
+            case 3:
+                $answer = $text_3[$counter_3];
+                $counter_3++;
+                break;
+            case 4:
+                $answer = $text_4[$counter_4];
+                $counter_4++;
+                break;
+            case 5:
+                $values = explode(",", $questions[$i]['answer']);
+                $answer = $radio_5[$counter_5];
+                for ($j = 0; $j < count($values); $j++) {
+                    if (stristr($values[$j], '-', true) == $answer) {
+                        $points = preg_replace("/[^0-9]/", '', $values[$j]);
+                    }
+                }
+                $counter_5++;
+                break;
+            case 6:
+                $values = explode(",", $questions[$i]['answer']);
+                for ($j = 0; $j < count($values); $j++) {
+                    $cut_value[$j] = stristr($values[$j], '-', true);
+                }
+                $array = array_uintersect($cut_value, $checkbox_6[$counter_6], "strcasecmp");
+                for ($j = 0; $j < count($values); $j++) {
+                    if (stristr($values[$j], '-', true) == $array[$j]) {
+                        $points += preg_replace("/[^0-9]/", '', $values[$j]);
+                    }
+                }
+                $answer = implode(", ", $checkbox_6[$counter_6]);
+                $counter_6++;
+                break;
+        }
+//        echo $answer.'<br>';
+//        echo $points.'<br>';
+//        echo $ip . '<br>';
+//        echo $session_id . '<br>';
+//        echo $question_id . '<br>';
+        mysqli_query($database, "INSERT INTO user_answers (ip, datetime, session_id, question_id, answer, points) VALUES ('$ip', NOW(), $session_id, $question_id, '$answer', $points)");
+    }
+    $ok = true;
 }
 ?>
 <!doctype html>
@@ -23,16 +147,16 @@ if (isset($_POST["submit"])) {
 <body>
 <?php
 echo '<form action="" method="post">';
+$counter_1 = 1;
+$counter_2 = 1;
+$counter_3 = 1;
+$counter_4 = 1;
+$counter_5 = 1;
+$counter_6 = 1;
 for ($i = 0; $i < count($questions); $i++) {
     $question = $questions[$i]['question'];
     $count = 0;
     $values = [];
-    $counter_1 = 1;
-    $counter_2 = 1;
-    $counter_3 = 1;
-    $counter_4 = 1;
-    $counter_5 = 1;
-    $counter_6 = 1;
     switch ($questions[$i]['question_type']) {
         case 1:
             echo "<label>$question</label>" . '<br>';
@@ -84,7 +208,14 @@ for ($i = 0; $i < count($questions); $i++) {
 }
 echo '<input type="submit" value="Отправить" name="submit">';
 echo '</form>';
+if ($ok == true) {
+    echo '<br>';
+    echo '<span>Форма отправлена!</span>';
+}
 ?>
 <script src="js/main.js"></script>
 </body>
 </html>
+<?php
+mysqli_close($database);
+?>
