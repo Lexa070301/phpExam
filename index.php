@@ -42,16 +42,17 @@ if (isset($_POST["submit-out"])) {
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Exam</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
     <?php if (!isset($_COOKIE['admin'])): ?>
         <form action="" method="post" class="enter">
-            <input required type="text" name="login" class="login form-input"
+            <input required type="text" name="login" class="login form-control form-input"
                    placeholder="Ваш логин">
-            <input required type="password" name="password" class="password form-input"
+            <input required type="password" name="password" class="password form-control form-input"
                    placeholder="Введите пароль">
-            <input class="submit" type="submit" name="submit" value="Войти">
+            <input class="submit btn btn-primary mb-10" type="submit" name="submit" value="Войти">
             <?php
             if ($temp == 'not found') {
                 echo '<span style="color: red">Пользователь не найден</span>';
@@ -63,13 +64,13 @@ if (isset($_POST["submit-out"])) {
     <?php endif; ?>
     <?php if (isset($_COOKIE['admin'])): ?>
         <form action="" method="post" class="enter">
-            <input class="submit" type="submit" name="submit-out" value="Выйти">
+            <input class="submit btn btn-primary mx-auto" type="submit" name="submit-out" value="Выйти">
         </form>
     <?php endif; ?>
     <?php if (isset($_COOKIE['admin']) && ($_COOKIE['admin'])): ?>
         <h2>Добрый день, <?= $_COOKIE['login'] ?></h2>
         <form action="" method="post" class="create-session">
-            <input type="submit" name="create-session-submit" class="create-session-submit" value="Новая сессия">
+            <input type="submit" name="create-session-submit" class="create-session-submit btn btn-primary mx-auto" value="Новая сессия">
         </form>
         <ul class="sessions">
             <?php
@@ -81,11 +82,11 @@ if (isset($_POST["submit-out"])) {
                     <a class='sessions__item__link' href='protocol.php?id=" . $sessions[$i]['id'] . "'>Посмотреть протокол</a>
                     <form action='' method='post' class='delete-session'>
                         <input type='hidden' name='session_id' value='" . $sessions[$i]['id'] . "'>
-                        <input type='submit' name='create-session-delete' class='create-session-delete' value='Удалить сессию'>
+                        <input type='submit' name='create-session-delete' class='create-session-delete btn btn-primary mx-auto' value='Удалить сессию'>
                     </form>
                     <form action='' method='post' class='close-session'>
                         <input type='hidden' name='session_id' value='" . $sessions[$i]['id'] . "'>
-                        <input type='submit' name='create-session-close' class='create-session-close' value='Закрыть сессию'>
+                        <input type='submit' name='create-session-close' class='create-session-close btn btn-primary mx-auto' value='Закрыть сессию'>
                     </form>
                   </li>";
             }

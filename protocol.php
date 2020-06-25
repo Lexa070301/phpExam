@@ -16,6 +16,8 @@ if (empty($questions) && (!isset($_COOKIE['admin']))) {
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Exam</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -51,10 +53,13 @@ for ($k = 0; $k < count($answers_count); $k++) {
     $m += $answers_count[$k]['ip_count'];
 }
 $sum = 0;
-for ($i = 0; $i < count($answers_count); $i++) {
-    $sum += $answers_count[$i]['points_count'];
+if (!empty($answers_count)) {
+    for ($i = 0; $i < count($answers_count); $i++) {
+        $sum += $answers_count[$i]['points_count'];
+    }
+    echo '<span style="margin-bottom: 50px; display: block">Средний балл по сесии:' . $sum / count($answers_count) . '</span>';
 }
-echo '<span style="margin-bottom: 50px; display: block">Средний балл по сесии:' . $sum/count($answers_count) . '</span>';
+
 ?>
 <script src="js/jquery-3.4.1.min.js"></script>
 <script src="js/main.js"></script>

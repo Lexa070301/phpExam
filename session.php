@@ -146,6 +146,7 @@ if (isset($_POST["submit"])) {
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Exam</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
@@ -165,25 +166,25 @@ if (isset($_POST["submit"])) {
             switch ($questions[$i]['question_type']) {
                 case 1:
                     echo "<label>$question</label>" . '<br>';
-                    echo "<input required type='number' name='number_1-$counter_1'>";
+                    echo "<input class='form-control' required type='number' name='number_1-$counter_1'>";
                     $counter_1++;
                     echo '<br>';
                     break;
                 case 2:
                     echo "<label>$question</label>" . '<br>';
-                    echo "<input required type='number' name='number_2-$counter_2' min='0'>";
+                    echo "<input class='form-control' required type='number' name='number_2-$counter_2' min='0'>";
                     $counter_2++;
                     echo '<br>';
                     break;
                 case 3:
                     echo "<label>$question</label>" . '<br>';
-                    echo "<input required type='text' name='text_3-$counter_3' minlength='1' maxlength='30'>";
+                    echo "<input class='form-control' required type='text' name='text_3-$counter_3' minlength='1' maxlength='30'>";
                     $counter_3++;
                     echo '<br>';
                     break;
                 case 4:
                     echo "<label>$question</label>" . '<br>';
-                    echo "<textarea required style='resize: none; width: 200px; height: 100px' name='text_4-$counter_4' minlength='1' maxlength='30'></textarea>";
+                    echo "<textarea class='form-control' required style='resize: none; width: 200px; height: 100px' name='text_4-$counter_4' minlength='1' maxlength='30'></textarea>";
                     $counter_4++;
                     echo '<br>';
                     break;
@@ -211,7 +212,7 @@ if (isset($_POST["submit"])) {
                     break;
             }
         }
-        echo '<input type="submit" value="Отправить" name="submit">';
+        echo '<input type="submit" value="Отправить" name="submit" class="btn btn-primary">';
         echo '</form>';
         if ($ok == true) {
             echo '<br>';
@@ -223,7 +224,7 @@ if (isset($_POST["submit"])) {
         <form action="" method="post" name="add_question">
             <label for="question_type">Выберите тип вопроса</label>
             <br>
-            <select name="question_type" id="question_type">
+            <select class="form-control" name="question_type" id="question_type">
                 <option value="1" selected>1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -234,9 +235,9 @@ if (isset($_POST["submit"])) {
             <br>
             <label for="add_question_text">Введите фурмулеровку вопроса</label>
             <br>
-            <input type="text" name="add_question_text" id="add_question_text">
+            <input type="text" name="add_question_text" class="form-control" id="add_question_text">
             <br>
-            <input type="submit" name="add_question_submit" value="Добавить вопрос"
+            <input type="submit" name="add_question_submit" class="btn btn-primary" value="Добавить вопрос"
         </form>
     <?php endif; ?>
     <script src="js/jquery-3.4.1.min.js"></script>
